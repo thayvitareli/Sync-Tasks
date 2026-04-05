@@ -12,6 +12,7 @@ interface HomeViewProps {
   tasks: Task[]
   isLoadingTasks: boolean
   handleToggleTask: (id: string) => void
+  handleDeleteTask: (id: string) => void
 }
 
 export default function HomeView({handleAddTask, tasks, task, setTask, isLoadingTasks, handleToggleTask, handleDeleteTask}: HomeViewProps) {
