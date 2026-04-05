@@ -19,6 +19,11 @@ export interface HomeViewModel {
   handleToggleTheme: () => void
   isAddingTask: boolean
   setIsAddingTask: (value: boolean) => void
+  isDeleteModalVisible: boolean
+  setIsDeleteModalVisible: (value: boolean) => void
+  taskToDelete: string | null
+  setTaskToDelete: (value: string | null) => void
+  confirmDeleteTask: () => void
 }
 
 export const useHomeViewModel = (): HomeViewModel => {
@@ -27,6 +32,8 @@ export const useHomeViewModel = (): HomeViewModel => {
   const [isLoadingTasks, setIsLoadingTasks] = useState(true)
   const [theme, setTheme] = useState('dark')
   const [isAddingTask, setIsAddingTask] = useState(false)
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null)
 
   const completedTasksCount = tasks.filter(t => t.completed).length
   const totalTasksCount = tasks.length
@@ -105,12 +112,22 @@ export const useHomeViewModel = (): HomeViewModel => {
   }
 
   const handleDeleteTask = (id: string) => {
-    try {
-      taskLocalRepository.delete(id)
-      fetchTasks()
-      void syncTasks()
-    } catch (error) {
-      console.error("Error deleting task:", error)
+    setTaskToDelete(id)
+    setIsDeleteModalVisible(true)
+  }
+
+  const confirmDeleteTask = () => {
+    if (taskToDelete) {
+      try {
+        taskLocalRepository.delete(taskToDelete)
+        fetchTasks()
+        void syncTasks()
+      } catch (error) {
+        console.error("Error deleting task:", error)
+      } finally {
+        setIsDeleteModalVisible(false)
+        setTaskToDelete(null)
+      }
     }
   }
 
@@ -129,5 +146,10 @@ export const useHomeViewModel = (): HomeViewModel => {
     handleToggleTheme,
     isAddingTask,
     setIsAddingTask,
+    isDeleteModalVisible,
+    setIsDeleteModalVisible,
+    taskToDelete,
+    setTaskToDelete,
+    confirmDeleteTask,
   }
 }

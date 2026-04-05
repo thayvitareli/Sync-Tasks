@@ -14,7 +14,8 @@ export default function App() {
 
   const {
     tasks, task, setTask, handleAddTask, isLoadingTasks, handleToggleTask, handleDeleteTask,
-    completedTasksCount, totalTasksCount, completionPercentage, theme, handleToggleTheme, isAddingTask, setIsAddingTask
+    completedTasksCount, totalTasksCount, completionPercentage, theme, handleToggleTheme, isAddingTask, setIsAddingTask,
+    isDeleteModalVisible, setIsDeleteModalVisible, taskToDelete, setTaskToDelete, confirmDeleteTask
   } = useHomeViewModel()
 
   return (
@@ -25,6 +26,8 @@ export default function App() {
         isLoadingTasks={isLoadingTasks} handleToggleTask={handleToggleTask} handleDeleteTask={handleDeleteTask}
         completedTasksCount={completedTasksCount} totalTasksCount={totalTasksCount} completionPercentage={completionPercentage}
         theme={theme} handleToggleTheme={handleToggleTheme} isAddingTask={isAddingTask} setIsAddingTask={setIsAddingTask}
+        isDeleteModalVisible={isDeleteModalVisible} setIsDeleteModalVisible={setIsDeleteModalVisible}
+        taskToDelete={taskToDelete} setTaskToDelete={setTaskToDelete} confirmDeleteTask={confirmDeleteTask}
       />
     </SafeAreaProvider>
   )
