@@ -5,19 +5,22 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: '#4a40e0',
-        'primary-container': '#9795ff',
-        surface: '#faf4ff',
-        'surface-container-lowest': '#ffffff',
-        'surface-container-low': '#f5eeff',
-        'surface-container': '#ede4ff',
-        'surface-container-highest': '#e2d7ff',
-        'on-surface': '#32294f',
-        'outline-variant': '#b2a6d5',
-        tertiary: '#983772',
+        background: 'var(--background)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        tertiary: 'var(--tertiary)',
+        neutral: 'var(--neutral)',
+        surface: 'var(--surface)',
+        'surface-container-lowest': 'var(--surface-container-lowest)',
+        'surface-container-low': 'var(--surface-container-low)',
+        'surface-container': 'var(--surface-container)',
+        'surface-container-highest': 'var(--surface-container-highest)',
+        'on-surface': 'var(--on-surface)',
+        'outline-variant': 'var(--outline-variant)',
       },
       fontFamily: {
         display: ['Manrope', 'sans-serif'],
@@ -27,7 +30,7 @@ module.exports = {
         label: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        ambient: '0 12px 32px -4px rgba(50, 41, 79, 0.08)',
+        ambient: '0 12px 32px -4px rgba(0, 0, 0, 0.5)',
       },
       borderRadius: {
         DEFAULT: '0.5rem',
