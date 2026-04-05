@@ -12,14 +12,29 @@ export interface HomeViewModel {
   isLoadingTasks: boolean
   handleToggleTask: (id: string) => void
   handleDeleteTask: (id: string) => void
+  completedTasksCount: number
+  totalTasksCount: number
+  completionPercentage: number
+  theme: string
+  handleToggleTheme: () => void
+  isAddingTask: boolean
+  setIsAddingTask: (value: boolean) => void
 }
 
 export const useHomeViewModel = (): HomeViewModel => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [task, setTask] = useState('')
   const [isLoadingTasks, setIsLoadingTasks] = useState(true)
+  const [theme, setTheme] = useState('dark')
+  const [isAddingTask, setIsAddingTask] = useState(false)
 
+  const completedTasksCount = tasks.filter(t => t.completed).length
+  const totalTasksCount = tasks.length
+  const completionPercentage = totalTasksCount > 0 ? Math.round((completedTasksCount / totalTasksCount) * 100) : 0
 
+  const handleToggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+  }
   const fetchTasks = useCallback(() => {
     try {
       setIsLoadingTasks(true)
@@ -107,5 +122,12 @@ export const useHomeViewModel = (): HomeViewModel => {
     isLoadingTasks,
     handleToggleTask,
     handleDeleteTask,
+    completedTasksCount,
+    totalTasksCount,
+    completionPercentage,
+    theme,
+    handleToggleTheme,
+    isAddingTask,
+    setIsAddingTask,
   }
 }
