@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
 import { Task } from "../../model/task/task"
 import { taskLocalRepository } from "../../database/taskLocalRepository"
+import { isSupabaseConfigured } from "../../services/supabaseClient"
+import { syncTasksWithSupabase } from "../../services/taskSyncService"
 
 export interface HomeViewModel {
   tasks: Task[]
@@ -17,50 +19,60 @@ export const useHomeViewModel = (): HomeViewModel => {
   const [task, setTask] = useState('')
   const [isLoadingTasks, setIsLoadingTasks] = useState(true)
 
+
   const fetchTasks = useCallback(() => {
     try {
       setIsLoadingTasks(true)
-      const rawTasks = taskLocalRepository.getAll() as any[];
-      const allTasks: Task[] = rawTasks.map(task => ({
-        ...task,
-        completed: Boolean(task.completed),
-        synced: Boolean(task.synced)
-      }));
-      setTasks(allTasks);
+      const allTasks = taskLocalRepository.getAll()
+      setTasks(allTasks)
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error("Error fetching tasks:", error)
     } finally {
       setIsLoadingTasks(false)
     }
-  }, []);
+  }, [])
+
+  const syncTasks = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      return
+    }
+    const didSync = await syncTasksWithSupabase()
+
+    if (didSync) {
+      fetchTasks()
+    }
+  }, [fetchTasks])
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    fetchTasks()
+    void syncTasks()
+  }, [fetchTasks, syncTasks])
 
   const handleAddTask = () => {
     if (task.trim()) {
       const newTask: Task = {
         id: Date.now().toString(),
         title: task.trim(),
-        completed: false, 
+        completed: false,
         updated_at: Date.now(),
-        synced: false
+        synced: false,
+        deleted: false
       }
-      
+
       try {
         taskLocalRepository.create(newTask)
         fetchTasks()
         setTask('')
+        void syncTasks()
       } catch (error) {
-         console.error("Error creating task:", error);
+        console.error("Error creating task:", error)
       }
     }
   }
 
   const handleToggleTask = (id: string) => {
     try {
-      const task = tasks.find(task => task.id === id)
+      const task = tasks.find((task) => task.id === id)
       if (task) {
         taskLocalRepository.update({
           ...task,
@@ -69,24 +81,23 @@ export const useHomeViewModel = (): HomeViewModel => {
           synced: false
         })
 
-       setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task)) 
-    }
-       
-      } catch (error) {
-        console.error("Error toggling task:", error);
+        fetchTasks()
+        void syncTasks()
       }
+    } catch (error) {
+      console.error("Error toggling task:", error)
     }
+  }
 
-    const handleDeleteTask = (id: string) => {
-      try {
-        taskLocalRepository.delete(id)
-       
-        setTasks(tasks.filter(task => task.id !== id)) 
-      } catch (error) {
-        console.error("Error deleting task:", error);
-      }
+  const handleDeleteTask = (id: string) => {
+    try {
+      taskLocalRepository.delete(id)
+      fetchTasks()
+      void syncTasks()
+    } catch (error) {
+      console.error("Error deleting task:", error)
     }
-  
+  }
 
   return {
     tasks,
@@ -95,6 +106,6 @@ export const useHomeViewModel = (): HomeViewModel => {
     handleAddTask,
     isLoadingTasks,
     handleToggleTask,
-    handleDeleteTask
+    handleDeleteTask,
   }
 }
