@@ -7,7 +7,15 @@ export const initDatabase = () => {
       title TEXT NOT NULL,
       completed INTEGER DEFAULT 0,
       updated_at INTEGER NOT NULL,
-      synced INTEGER DEFAULT 0
+      synced INTEGER DEFAULT 0,
+      deleted INTEGER DEFAULT 0
     );
   `)
+
+  const columns = db.getAllSync(`PRAGMA table_info(tasks)`) as Array<{ name: string }>
+  const hasDeletedColumn = columns.some((column) => column.name === 'deleted')
+
+  if (!hasDeletedColumn) {
+    db.execSync(`ALTER TABLE tasks ADD COLUMN deleted INTEGER DEFAULT 0;`)
+  }
 }
