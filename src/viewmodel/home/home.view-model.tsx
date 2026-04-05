@@ -7,14 +7,17 @@ export interface HomeViewModel {
   task: string
   setTask: (value: string) => void
   handleAddTask: () => void
+  isLoadingTasks: boolean
 }
 
 export const useHomeViewModel = (): HomeViewModel => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [task, setTask] = useState('')
+  const [isLoadingTasks, setIsLoadingTasks] = useState(true)
 
   const fetchTasks = useCallback(() => {
     try {
+      setIsLoadingTasks(true)
       const rawTasks = taskLocalRepository.getAll() as any[];
       const allTasks: Task[] = rawTasks.map(task => ({
         ...task,
@@ -24,6 +27,8 @@ export const useHomeViewModel = (): HomeViewModel => {
       setTasks(allTasks);
     } catch (error) {
       console.error("Error fetching tasks:", error);
+    } finally {
+      setIsLoadingTasks(false)
     }
   }, []);
 
@@ -55,6 +60,7 @@ export const useHomeViewModel = (): HomeViewModel => {
     tasks,
     task,
     setTask,
-    handleAddTask
+    handleAddTask,
+    isLoadingTasks
   }
 }
