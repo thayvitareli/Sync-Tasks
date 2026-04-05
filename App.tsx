@@ -12,12 +12,20 @@ export default function App() {
     initDatabase()
   }, [])
 
-  const {tasks, task, setTask, handleAddTask, isLoadingTasks, handleToggleTask, handleDeleteTask} = useHomeViewModel()
+  const {
+    tasks, task, setTask, handleAddTask, isLoadingTasks, handleToggleTask, handleDeleteTask,
+    completedTasksCount, totalTasksCount, completionPercentage, theme, handleToggleTheme, isAddingTask, setIsAddingTask
+  } = useHomeViewModel()
 
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" translucent backgroundColor="transparent" />
-      <HomeView tasks={tasks} task={task} setTask={setTask} handleAddTask={handleAddTask} isLoadingTasks={isLoadingTasks} handleToggleTask={handleToggleTask} handleDeleteTask={handleDeleteTask} />
+      <HomeView 
+        tasks={tasks} task={task} setTask={setTask} handleAddTask={handleAddTask} 
+        isLoadingTasks={isLoadingTasks} handleToggleTask={handleToggleTask} handleDeleteTask={handleDeleteTask}
+        completedTasksCount={completedTasksCount} totalTasksCount={totalTasksCount} completionPercentage={completionPercentage}
+        theme={theme} handleToggleTheme={handleToggleTheme} isAddingTask={isAddingTask} setIsAddingTask={setIsAddingTask}
+      />
     </SafeAreaProvider>
   )
 }
