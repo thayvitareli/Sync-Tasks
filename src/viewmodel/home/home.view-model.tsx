@@ -8,6 +8,8 @@ export interface HomeViewModel {
   setTask: (value: string) => void
   handleAddTask: () => void
   isLoadingTasks: boolean
+  handleToggleTask: (id: string) => void
+  handleDeleteTask: (id: string) => void
 }
 
 export const useHomeViewModel = (): HomeViewModel => {
@@ -56,11 +58,43 @@ export const useHomeViewModel = (): HomeViewModel => {
     }
   }
 
+  const handleToggleTask = (id: string) => {
+    try {
+      const task = tasks.find(task => task.id === id)
+      if (task) {
+        taskLocalRepository.update({
+          ...task,
+          completed: !task.completed,
+          updated_at: Date.now(),
+          synced: false
+        })
+
+       setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task)) 
+    }
+       
+      } catch (error) {
+        console.error("Error toggling task:", error);
+      }
+    }
+
+    const handleDeleteTask = (id: string) => {
+      try {
+        taskLocalRepository.delete(id)
+       
+        setTasks(tasks.filter(task => task.id !== id)) 
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    }
+  
+
   return {
     tasks,
     task,
     setTask,
     handleAddTask,
-    isLoadingTasks
+    isLoadingTasks,
+    handleToggleTask,
+    handleDeleteTask
   }
 }
