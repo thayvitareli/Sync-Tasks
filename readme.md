@@ -1,5 +1,40 @@
 # SyncTasks
 
+<div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/ec97ea90-1a03-4fc0-b9d9-144b2fe76026" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+    <td align="center">
+       <img  width="250"
+        <img width="1179" height="2556" alt="Simulator Screenshot - iPhone 16 - 2026-04-05 at 16 02 59" src="https://github.com/user-attachments/assets/df2e2f45-a58c-40a8-bf45-bee40c2e2fae" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/da2d6787-8681-418f-a144-4f94acb396c0" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/d4639f3d-2d35-4e78-9cc6-02304620b247" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/53275cfd-cd18-47cb-aba2-02eaa087a80a" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/29a08770-b953-4035-97d2-11e77a5f19ae" width="250"
+           style="background:#fff; padding:6px; border-radius:20px; box-shadow:0 0 8px rgba(0,0,0,0.2);" />
+    </td>
+  </tr>
+</table>
+
+
 Offline-first task app with local SQLite persistence and direct Supabase sync.
 
 ## English
