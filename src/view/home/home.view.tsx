@@ -4,12 +4,16 @@ import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View, Modal, K
 import { Task } from '../../model/task/task'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TaskCard from '../../components/taskCard'
+import { FilterStatus } from '../../viewmodel/home/home.view-model'
 
 interface HomeViewProps {
   task: string
   setTask: (value: string) => void
   handleAddTask: () => void
   tasks: Task[]
+  filteredTasks: Task[]
+  filterStatus: FilterStatus
+  setFilterStatus: (status: FilterStatus) => void
   isLoadingTasks: boolean
   handleToggleTask: (id: string) => void
   handleDeleteTask: (id: string) => void
@@ -38,6 +42,8 @@ interface HomeHeaderProps {
   task: string
   setTask: (val: string) => void
   handleAddTask: () => void
+  filterStatus: FilterStatus
+  setFilterStatus: (status: FilterStatus) => void
 }
 
 const HomeHeader = ({
@@ -50,7 +56,9 @@ const HomeHeader = ({
   setIsAddingTask,
   task,
   setTask,
-  handleAddTask
+  handleAddTask,
+  filterStatus,
+  setFilterStatus
 }: HomeHeaderProps) => (
   <View className="w-full">
     {/* Header */}
@@ -117,6 +125,27 @@ const HomeHeader = ({
       </View>
     )}
 
+    {/* Filters */}
+    <View className="flex-row gap-2 mb-6">
+      {(['all', 'completed', 'non-completed'] as FilterStatus[]).map((status) => (
+        <Pressable
+          key={status}
+          onPress={() => setFilterStatus(status)}
+          className={`px-4 py-2 rounded-full border ${
+            filterStatus === status 
+              ? 'bg-[#8e84f5] border-[#8e84f5]' 
+              : 'bg-transparent border-[#2e264a]'
+          }`}
+        >
+          <Text className={`font-bold text-xs capitalize ${
+            filterStatus === status ? 'text-[#2b2361]' : 'text-[#7b719d]'
+          }`}>
+            {status === 'all' ? 'All' : status === 'completed' ? 'Completed' : 'Pending'}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+
     {/* Tasks */}
     <View className="flex-row justify-between items-center mb-4">
       <Text className="text-on-surface text-xl font-bold">Tasks</Text>
@@ -129,7 +158,7 @@ const HomeFooter = () => (
 )
 
 export default function HomeView({ 
-  handleAddTask, tasks, task, setTask, isLoadingTasks, handleToggleTask, handleDeleteTask,
+  handleAddTask, tasks, filteredTasks, filterStatus, setFilterStatus, task, setTask, isLoadingTasks, handleToggleTask, handleDeleteTask,
   completedTasksCount, totalTasksCount, completionPercentage, theme, handleToggleTheme, isAddingTask, setIsAddingTask,
   isDeleteModalVisible, setIsDeleteModalVisible, taskToDelete, setTaskToDelete, confirmDeleteTask
 }: HomeViewProps) {
@@ -155,12 +184,14 @@ export default function HomeView({
             task={task}
             setTask={setTask}
             handleAddTask={handleAddTask}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
           />
           <ActivityIndicator size="large" color="#4F46E5" />
         </View>
       ) : (
         <FlatList
-          data={tasks}
+          data={filteredTasks}
           ListHeaderComponent={
             <HomeHeader 
               theme={theme}
@@ -173,6 +204,8 @@ export default function HomeView({
               task={task}
               setTask={setTask}
               handleAddTask={handleAddTask}
+              filterStatus={filterStatus}
+              setFilterStatus={setFilterStatus}
             />
           }
           ListFooterComponent={HomeFooter}

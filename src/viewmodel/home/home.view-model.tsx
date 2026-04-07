@@ -4,8 +4,13 @@ import { taskLocalRepository } from "../../database/taskLocalRepository"
 import { isSupabaseConfigured } from "../../services/supabaseClient"
 import { syncTasksWithSupabase } from "../../services/taskSyncService"
 
+export type FilterStatus = 'all' | 'completed' | 'non-completed'
+
 export interface HomeViewModel {
   tasks: Task[]
+  filteredTasks: Task[]
+  filterStatus: FilterStatus
+  setFilterStatus: (status: FilterStatus) => void
   task: string
   setTask: (value: string) => void
   handleAddTask: () => void
@@ -28,12 +33,19 @@ export interface HomeViewModel {
 
 export const useHomeViewModel = (): HomeViewModel => {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
   const [task, setTask] = useState('')
   const [isLoadingTasks, setIsLoadingTasks] = useState(true)
   const [theme, setTheme] = useState('dark')
   const [isAddingTask, setIsAddingTask] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null)
+
+  const filteredTasks = tasks.filter(t => {
+    if (filterStatus === 'completed') return t.completed
+    if (filterStatus === 'non-completed') return !t.completed
+    return true
+  })
 
   const completedTasksCount = tasks.filter(t => t.completed).length
   const totalTasksCount = tasks.length
@@ -133,6 +145,9 @@ export const useHomeViewModel = (): HomeViewModel => {
 
   return {
     tasks,
+    filteredTasks,
+    filterStatus,
+    setFilterStatus,
     task,
     setTask,
     handleAddTask,
