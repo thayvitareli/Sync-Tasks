@@ -54,6 +54,7 @@ Current behavior:
 - Create task
 - Toggle task completion
 - Delete task (soft delete via `deleted` flag)
+- Filter tasks by status (All, Completed, Pending)
 - Local sync control with `synced` flag in SQLite
 
 
@@ -145,6 +146,7 @@ Comportamento atual:
 - Criar tarefa
 - Marcar/desmarcar conclusão
 - Excluir tarefa (soft delete com flag `deleted`)
+- Filtrar tarefas por status (All, Completed, Pending)
 - Controle local de sincronização com flag `synced` no SQLite
 
 
